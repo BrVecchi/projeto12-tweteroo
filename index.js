@@ -29,71 +29,7 @@ const TWEETS = [
   {
     username: "patrick",
     tweet: "salamaleico",
-  },
-  {
-    username: "bobesponja",
-    tweet: "eu amo o Patrick",
-  },
-  {
-    username: "patrick",
-    tweet: "eu amo o Bob Esponja",
-  },
-  {
-    username: "bobesponja",
-    tweet: "que d+!!!",
-  },
-  {
-    username: "patrick",
-    tweet: "salamaleico",
-  },
-  {
-    username: "bobesponja",
-    tweet: "eu amo o Patrick",
-  },
-  {
-    username: "patrick",
-    tweet: "eu amo o Bob Esponja",
-  },
-  {
-    username: "bobesponja",
-    tweet: "que d+!!!",
-  },
-  {
-    username: "patrick",
-    tweet: "salamaleico",
-  },
-  {
-    username: "bobesponja",
-    tweet: "eu amo o Patrick",
-  },
-  {
-    username: "patrick",
-    tweet: "eu amo o Bob Esponja",
-  },
-  {
-    username: "bobesponja",
-    tweet: "que d+!!!",
-  },
-  {
-    username: "patrick",
-    tweet: "salamaleico",
-  },
-  {
-    username: "bobesponja",
-    tweet: "eu amo o Patrick",
-  },
-  {
-    username: "patrick",
-    tweet: "eu amo o Bob Esponja",
-  },
-  {
-    username: "bobesponja",
-    tweet: "que d+!!!",
-  },
-  {
-    username: "patrick",
-    tweet: "salamaleico",
-  },
+  }
 ];
 
 const app = express();
@@ -134,19 +70,27 @@ app.get("/tweets", (req, res) => {
 
   if (page <= 0) {
     res.status(400).send("Algo errado no endereço..")
+    return
   }
 
-  // const newTweets = TWEETS.slice(-10);
   res.status(200).send(newTweets);
 });
 
-// app.get("/tweets/:username", (req, res) => {
+app.get("/tweets/:username", (req, res) => {
+  const username = req.params.username
+  const userTweets = TWEETS.filter((tweet) => tweet.username === username)
+  if (!username) {
+    res.status(400).send("Esse usuário não postou nada ou não existe.")
+  }
+
+  res.status(200).send(userTweets)
+
 // TWEETS.forEach((tweet) => {
 //   const user = USERS.find((user) => user.username === tweet.username);
 //   tweet.avatar = user.avatar;
 // });
 // const newTweets = TWEETS.slice(-10)
 //   res.status()
-// })
+})
 
 app.listen(5000);
