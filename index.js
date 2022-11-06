@@ -13,6 +13,7 @@ const USERS = [
       "https://www.torredevigilancia.com/wp-content/uploads/2020/08/patrick-star-wallpaper-810x608.jpg",
   },
 ];
+
 const TWEETS = [
   {
     username: "bobesponja",
@@ -29,7 +30,7 @@ const TWEETS = [
   {
     username: "patrick",
     tweet: "salamaleico",
-  }
+  },
 ];
 
 const app = express();
@@ -47,8 +48,9 @@ app.post("/sign-up", (req, res) => {
 });
 
 app.post("/tweets", (req, res) => {
-  TWEETS.push(req.body);
-  const { username, tweet } = req.body;
+  const { tweet } = req.body;
+  const username = req.headers.user;
+  TWEETS.push({ tweet, username });
   if (!username || !tweet) {
     res.status(400).send("Todos os campos são obrigatórios!");
     return;
@@ -57,11 +59,11 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
-  const page = req.query.page
-  const limit = 10
-  const startIndex = (page -1) * limit
-  const endIndex = page * limit
-  const newTweets = TWEETS.slice(startIndex, endIndex)
+  const page = req.query.page;
+  const limit = 10;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const newTweets = TWEETS.slice(startIndex, endIndex);
 
   newTweets.forEach((tweet) => {
     const user = USERS.find((user) => user.username === tweet.username);
@@ -69,28 +71,22 @@ app.get("/tweets", (req, res) => {
   });
 
   if (page <= 0) {
-    res.status(400).send("Algo errado no endereço..")
-    return
+    res.status(400).send("Algo errado no endereço..");
+    return;
   }
 
   res.status(200).send(newTweets);
 });
 
 app.get("/tweets/:username", (req, res) => {
-  const username = req.params.username
-  const userTweets = TWEETS.filter((tweet) => tweet.username === username)
+  const username = req.params.username;
+  const userTweets = TWEETS.filter((tweet) => tweet.username === username);
   if (!username) {
-    res.status(400).send("Esse usuário não postou nada ou não existe.")
+    res.status(400).send("Esse usuário não postou nada ou não existe.");
+    return;
   }
 
-  res.status(200).send(userTweets)
-
-// TWEETS.forEach((tweet) => {
-//   const user = USERS.find((user) => user.username === tweet.username);
-//   tweet.avatar = user.avatar;
-// });
-// const newTweets = TWEETS.slice(-10)
-//   res.status()
-})
+  res.status(200).send(userTweets);
+});
 
 app.listen(5000);
